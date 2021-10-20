@@ -14,6 +14,7 @@ for port in range(1,100):
         continue
     finally:
         sock.close()
+        
 import threading
 import socket
 from tqdm import tqdm
