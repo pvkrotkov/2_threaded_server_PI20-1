@@ -1,3 +1,19 @@
+import socket
+from threading import Thread
+
+N = 2**16 - 1
+y = input("Введите имя хоста (например: 127.0.0.1):")
+
+for port in range(1,100):
+    sock = socket.socket()
+    try:
+        print(port)
+        sock.connect((y, port))
+        print("Порт", i, "открыт")
+    except:
+        continue
+    finally:
+        sock.close()
 import threading
 import socket
 from tqdm import tqdm
