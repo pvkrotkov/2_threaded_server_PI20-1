@@ -4,7 +4,7 @@ from progress.bar import Bar
 import time
 start_time = time.time()
 bar = Bar('Processing', max=20)
-p_lock = threading.Lock()  # Безопасность потоков
+p_lock = threading.Lock()  # Потокобезопасность
 N = 65000
 port = 0
 part = N//20
@@ -24,8 +24,6 @@ def scan(N):
             print("\n"+"\033[32mПорт", str(port), "открыт\033")
         except ConnectionRefusedError:
             pass
-            # print("\n"+"\033[31mПорт", str(port), "закрыт")
-            # sock.close()
         finally:
             sock.close()
     with p_lock:
@@ -36,11 +34,11 @@ def scan(N):
         bar.finish()
 
 
-t = [threading.Thread(target=scan, args=[N]) for i in range(20)]  # Создание потоков
+t = [threading.Thread(target=scan, args=[N]) for i in range(20)]  # Создаем потоки
 
-[t1.start() for t1 in t]  # Поочередный запуск потоков
+[t1.start() for t1 in t]  # Запускаем каждый поток
 
-[t1.join() for t1 in t]  # Выполнение всех потоков, а затем возвращение к выполнению программы в главном потоке
+[t1.join() for t1 in t]  # Позволяет выполнить все потоки, а после продолжить выполнение программы в главном потоке
 
 print("All is ok in the end")
 print("--- %s seconds ---" % (time.time() - start_time))
