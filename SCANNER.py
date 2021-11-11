@@ -22,16 +22,16 @@ def scan(N):
             sock.settimeout(0.01)
             sock.connect(('localhost', port))
             print("\n"+"\033[32mПорт", str(port), "открыт\033")
-        except ConnectionRefusedError:
+        except:
             pass
         finally:
             sock.close()
     with p_lock:
         if int(port) == k*part:
             k += 1
-        bar.finish()
+"""        bar.finish()
         bar.next()
-        bar.finish()
+        bar.finish()"""
 
 
 t = [threading.Thread(target=scan, args=[N]) for i in range(20)]  # Создаем потоки
