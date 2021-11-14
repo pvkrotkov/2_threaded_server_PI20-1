@@ -5,7 +5,7 @@ import time
 start_time = time.time()
 bar = Bar('Processing', max=20)
 p_lock = threading.Lock()  # Потокобезопасность
-N = 65000
+N = 60000
 port = 0
 part = N//20
 k = 1
@@ -24,14 +24,16 @@ def scan(N):
             print("\n"+"\033[32mПорт", str(port), "открыт\033")
         except:
             pass
+            # print("\n"+"\033[31mПорт", str(port), "закрыт")
+            # sock.close()
         finally:
             sock.close()
     with p_lock:
         if int(port) == k*part:
             k += 1
-"""        bar.finish()
-        bar.next()
-        bar.finish()"""
+#       bar.finish()
+#       bar.next()
+#       bar.finish()
 
 
 t = [threading.Thread(target=scan, args=[N]) for i in range(20)]  # Создаем потоки
