@@ -1,16 +1,47 @@
 import socket
-from time import sleep
+import re
+import time
+from threading import Thread
+from scanner import find_port
+from scanner import main_port
 
 sock = socket.socket()
-sock.setblocking(1)
-sock.connect(('10.38.165.12', 9090))
+sock.setblocking(True)
+isOpen = False
+ports = [i for i in range(1024, 65535)]
 
-#msg = input()
-msg = "Hi!"
-sock.send(msg.encode())
 
-data = sock.recv(1024)
+def client():
+    global isOpen
+    adr = str(input('Введите адрес сервера = '))
+    if re.search(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", adr):
+        find_port(sock, adr)
+        while main_port == -1:
+            time.sleep(1)
+        sock.connect((adr, main_port))
+        isOpen = True
+        print("Подключение установленно")
+        while True:
+            msg = input()
+            sock.send(msg.encode())
+            if msg == "exit":
+                break
+    else:
+        print("Не верный IP")
 
-sock.close()
 
-print(data.decode())
+def server():
+    global isOpen
+    while True:
+        if isOpen:
+            data = sock.recv(1024)
+            if data is not None or data != "":
+                print(data.decode())
+
+
+if __name__ == "__main__":
+    client = Thread(target=client)
+    server = Thread(target=server)
+
+    client.start()
+    server.start()
